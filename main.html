@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second-hand Trading Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#FF7D00',
+                        neutral: {
+                            100: '#F5F7FA',
+                            200: '#E4E7ED',
+                            300: '#C0C4CC',
+                            400: '#909399',
+                            500: '#606266',
+                            600: '#303133',
+                            700: '#1E1E1E',
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 12px rgba(0, 0, 0, 0.05)',
+                        'card-hover': '0 10px 24px rgba(0, 0, 0, 0.08)',
+                    }
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient {
+                background: linear-gradient(135deg, #165DFF 0%, #0040C9 100%);
+            }
+            .scale-hover {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .scale-hover:hover {
+                transform: translateY(-4px);
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-neutral-100 text-neutral-600 min-h-screen flex flex-col">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center space-x-2">
+                        <i class="fa-solid fa-handshake text-primary text-2xl"></i>
+                        <span class="text-xl font-bold text-neutral-700">Second-hand Trading Platform</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="#" class="text-neutral-600 hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md">Home Page</a>
+                    <a href="#" class="text-neutral-600 hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md">Classify</a>
+                    <a href="#" class="text-neutral-600 hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md">Newest Goods</a>
+                    <a href="#" class="text-neutral-600 hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md">Hot Goods</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button class="hidden sm:block bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center">
+                        <i class="fa fa-plus mr-2"></i>
+                        <span>post your good</span>
+                    </button>
+                    <button class="md:hidden text-neutral-600 hover:text-primary">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- 左侧表单区域 -->
+            <div class="lg:w-1/3">
+                <div class="bg-white rounded-xl shadow-card p-6 mb-6 transition-all duration-300 hover:shadow-card-hover">
+                    <h2 class="text-xl font-bold text-neutral-700 mb-4 flex items-center">
+                        <i class="fa fa-plus-circle text-primary mr-2"></i>
+                        Post Second-hand Items
+                    </h2>
+                    <form id="newItemForm" class="space-y-4">
+                        <div>
+                            <label for="itemName" class="block text-sm font-medium text-neutral-700 mb-1">Name</label>
+                            <input type="text" id="itemName" name="itemName" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-200" placeholder="Please enter the name of the product" required>
+                        </div>
+                        <div>
+                            <label for="itemDescription" class="block text-sm font-medium text-neutral-700 mb-1">Description</label>
+                            <textarea id="itemDescription" name="itemDescription" rows="3" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-200" placeholder="Please enter the description" required></textarea>
+                        </div>
+                        <div>
+                            <label for="itemSeller" class="block text-sm font-medium text-neutral-700 mb-1">Seller</label>
+                            <input type="text" id="itemSeller" name="itemSeller" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-200" placeholder="Please enter your name" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="itemPrice" class="block text-sm font-medium text-neutral-700 mb-1">Price in RMB (¥)</label>
+                                <input type="number" id="itemPrice" name="itemPrice" min="0" step="0.01" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-200" placeholder="0.00" required>
+                            </div>
+                            <div>
+                                <label for="itemNewness" class="block text-sm font-medium text-neutral-700 mb-1">Newness percentage (%)</label>
+                                <input type="range" id="itemNewness" name="itemNewness" min="10" max="100" value="80" class="w-full accent-primary" required>
+                                <div class="flex justify-between text-xs text-neutral-500 mt-1">
+                                    <span>10%</span>
+                                    <span id="newnessValue">80%</span>
+                                    <span>100%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center group">
+                                <i class="fa fa-paper-plane mr-2 group-hover:translate-x-1 transition-transform duration-300"></i>
+                                Post Item
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-card p-6 transition-all duration-300 hover:shadow-card-hover">
+                    <h3 class="text-lg font-semibold text-neutral-700 mb-3 flex items-center">
+                        <i class="fa fa-info-circle text-primary mr-2"></i>
+                        Posting Tips
+                    </h3>
+                    <ul class="space-y-2 text-sm text-neutral-600">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Please make sure to fill in the true and accurate product information</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Uploading clear product photos can increase the transaction rate</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Reasonable pricing will help you sell your goods more quickly</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>Describe the status and functions of the product in detail</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 右侧商品列表区域 -->
+            <div class="lg:w-2/3">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-neutral-700 flex items-center">
+                        <i class="fa fa-list-alt text-primary mr-2"></i>
+                        Goods List
+                    </h2>
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Searching..." class="pl-10 pr-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-200 w-full sm:w-64">
+                        <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="itemsList">
+                    <!-- 商品卡片将通过JavaScript动态生成 -->
+                </div>
+
+                <!-- 空状态 -->
+                <div id="emptyState" class="hidden flex flex-col items-center justify-center py-16">
+                    <div class="bg-neutral-100 p-6 rounded-full mb-4">
+                        <i class="fa fa-box-open text-neutral-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-neutral-600 mb-2">No goods available for the moment.</h3>
+                    <p class="text-neutral-500 text-center max-w-md">Post your first second-hand item and start your trading journey!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-neutral-200 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-neutral-700 mb-4">second-hand trading platform By Kevin and Jason</h3>
+                    <p class="text-neutral-500 text-sm">A safe and convenient second-hand goods trading platform brings idle items back to life.</p>
+                </div>
+                <div>
+                    <h4 class="text-base font-medium text-neutral-700 mb-4">quick link</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">Home Page</a></li>
+                        <li><a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">Browse By Category</a></li>
+                        <li><a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">Newest Goods</a></li>
+                        <li><a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">Hot Goods</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-base font-medium text-neutral-700 mb-4">helping center</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">Trading Guide</a></li>
+                        <li><a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">common problem</a></li>
+                        <li><a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">safety tips</a></li>
+                        <li><a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">contact us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-base font-medium text-neutral-700 mb-4">subscribe us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">
+                            <i class="fa-brands fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">
+                            <i class="fa-brands fa-weibo text-xl"></i>
+                        </a>
+                        <a href="#" class="text-neutral-500 hover:text-primary transition-colors duration-200">
+                            <i class="fa-brands fa-qq text-xl"></i>
+                        </a>
+                    </div>
+                    <p class="text-neutral-500 text-sm mt-4">telephone number(Jason Sun): 133 4293 6357</p>
+                </div>
+            </div>
+            <div class="border-t border-neutral-200 mt-8 pt-6 text-center text-sm text-neutral-500">
+                <p>© 2025 Second-hand trading market. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 商品卡片模板 -->
+    <template id="itemCardTemplate">
+        <div class="bg-white rounded-xl shadow-card overflow-hidden scale-hover">
+            <div class="relative">
+                <img class="item-image w-full h-48 object-cover" src="" alt="商品图片">
+                <div class="absolute top-3 right-3 bg-secondary text-white text-xs font-medium px-2 py-1 rounded">
+                    <span class="item-newness">80%</span> new
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="item-name font-semibold text-neutral-700 mb-1 line-clamp-1"></h3>
+                <p class="item-description text-neutral-500 text-sm mb-3 line-clamp-2"></p>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="item-price font-bold text-primary text-lg">¥0.00</span>
+                    </div>
+                    <div class="flex items-center text-sm text-neutral-500">
+                        <i class="fa fa-user-circle mr-1"></i>
+                        <span class="item-seller"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        // 存储商品数据
+        let itemsData = [
+            {
+                name: "Xiaomi tablet Pro 15",
+                description: "2021 version, 16G RAM, 512G SSD, Intel i5 processor, 95% new, Used for less than a year, There is no malfunction at all, perfect appearance.",
+                seller: "Jason Sun",
+                price: 4500.00,
+                newness: 95
+            },
+            {
+                name: "Apple iPhone 13",
+                description: "128G Blue, bought in October, 2020, no damage, battery health 89%",
+                seller: "Kevin Zhang",
+                price: 4200.00,
+                newness: 90
+            },
+            {
+                name: "Huawei MateBook 14",
+                description: "2020 version, 8G RAM, 512G SSD, AMD ryzen 5 processor, 85% new, normally used traces, all functions work normally.",
+                seller: "Sean You",
+                price: 3200.00,
+                newness: 85
+            },
+            {
+                name: "Canon EOS R6",
+                description: "Nearly brand new,it has been used less than 50 times. The complete set of packaging accessories includes two batteries. There are no problems at all. It is sold for upgrading the equipment.",
+                seller: "Thomas Feng",
+                price: 12500.00,
+                newness: 98
+            }
+        ];
+
+        // DOM元素
+        const itemsList = document.getElementById('itemsList');
+        const newItemForm = document.getElementById('newItemForm');
+        const itemNewness = document.getElementById('itemNewness');
+        const newnessValue = document.getElementById('newnessValue');
+        const searchInput = document.getElementById('searchInput');
+        const emptyState = document.getElementById('emptyState');
+        const itemCardTemplate = document.getElementById('itemCardTemplate');
+
+        // 更新新旧程度显示
+        itemNewness.addEventListener('input', () => {
+            newnessValue.textContent = `${itemNewness.value}%`;
+        });
+
+        // 渲染商品列表
+        function renderItems(items) {
+            itemsList.innerHTML = '';
+            
+            if (items.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            items.forEach(item => {
+                const cardClone = document.importNode(itemCardTemplate.content, true);
+                
+                // 填充数据
+                cardClone.querySelector('.item-name').textContent = item.name;
+                cardClone.querySelector('.item-description').textContent = item.description;
+                cardClone.querySelector('.item-seller').textContent = item.seller;
+                cardClone.querySelector('.item-price').textContent = `¥${item.price.toFixed(2)}`;
+                cardClone.querySelector('.item-newness').textContent = `${item.newness}%`;
+                
+                // 设置图片路径
+                let imageName = '';
+                switch (item.name.toLowerCase()) {
+                    case 'xiaomi tablet pro 15':
+                        imageName = 'xiaomi tablet 15.jpg';
+                        break;
+                    case 'apple iphone 13':
+                        imageName = 'iphone 13.jpg';
+                        break;
+                    case 'huawei matebook 14':
+                        imageName = 'huawei matebook 14.jpeg';
+                        break;
+                    case 'canon eos r6':
+                        imageName = 'canon R6.jpeg';
+                        break;
+                    default:
+                        imageName = 'default.jpg'; // 可自定义默认图片
+                }
+                cardClone.querySelector('.item-image').src = 'images/' + imageName;
+                
+                // 添加到列表
+                itemsList.appendChild(cardClone);
+            });
+        }
+
+        // 表单提交处理
+        newItemForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const newItem = {
+                name: document.getElementById('itemName').value,
+                description: document.getElementById('itemDescription').value,
+                seller: document.getElementById('itemSeller').value,
+                price: parseFloat(document.getElementById('itemPrice').value),
+                newness: parseInt(document.getElementById('itemNewness').value)
+            };
+            
+            // 添加到数据列表
+            itemsData.unshift(newItem);
+            
+            // 重新渲染列表
+            renderItems(itemsData);
+            
+            // 重置表单
+            newItemForm.reset();
+            newnessValue.textContent = '80%';
+            
+            // 显示成功提示
+            showNotification('successfully post!', 'success');
+        });
+
+        // 搜索功能
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                renderItems(itemsData);
+                return;
+            }
+            
+            const filteredItems = itemsData.filter(item => 
+                item.name.toLowerCase().includes(searchTerm) || 
+                item.description.toLowerCase().includes(searchTerm) || 
+                item.seller.toLowerCase().includes(searchTerm)
+            );
+            
+            renderItems(filteredItems);
+        });
+
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-500 ease-in-out translate-x-full opacity-0`;
+            
+            // 设置通知样式
+            if (type === 'success') {
+                notification.classList.add('bg-green-50', 'border-l-4', 'border-green-400', 'text-green-700');
+                notification.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-check-circle text-green-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">${message}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                notification.classList.add('bg-blue-50', 'border-l-4', 'border-blue-400', 'text-blue-700');
+                notification.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-info-circle text-blue-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">${message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // 添加到页面
+            document.body.appendChild(notification);
+            
+            // 显示通知
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full', 'opacity-0');
+            }, 100);
+            
+            // 自动关闭
+            setTimeout(() => {
+                notification.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            renderItems(itemsData);
+            
+            // 页面滚动时导航栏样式变化
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                if (window.scrollY > 10) {
+                    header.classList.add('shadow-md');
+                    header.classList.remove('shadow-sm');
+                } else {
+                    header.classList.remove('shadow-md');
+                    header.classList.add('shadow-sm');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
